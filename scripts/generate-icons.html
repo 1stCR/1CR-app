@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generate PWA Icons</title>
+</head>
+<body>
+  <h2>PWA Icon Generator</h2>
+  <p>Right-click each canvas and "Save Image As" with the corresponding filename.</p>
+  <div id="icons"></div>
+
+  <script>
+    const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+    const container = document.getElementById('icons');
+
+    sizes.forEach(size => {
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+
+      // Background gradient
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#667eea');
+      gradient.addColorStop(1, '#764ba2');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, size, size);
+
+      // Add rounded corners
+      ctx.globalCompositeOperation = 'destination-in';
+      ctx.beginPath();
+      ctx.roundRect(0, 0, size, size, size * 0.15);
+      ctx.fill();
+
+      // White text
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = 'white';
+      ctx.font = `bold ${size * 0.3}px Arial`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('AMD', size / 2, size / 2 - size * 0.08);
+
+      ctx.font = `${size * 0.15}px Arial`;
+      ctx.fillText('Pro', size / 2, size / 2 + size * 0.15);
+
+      const wrapper = document.createElement('div');
+      wrapper.style.margin = '20px';
+      wrapper.style.display = 'inline-block';
+
+      const label = document.createElement('p');
+      label.textContent = `icon-${size}x${size}.png`;
+
+      wrapper.appendChild(canvas);
+      wrapper.appendChild(label);
+      container.appendChild(wrapper);
+    });
+
+    // Create maskable icon
+    const maskable = document.createElement('canvas');
+    maskable.width = 512;
+    maskable.height = 512;
+    const ctx = maskable.getContext('2d');
+
+    // Full bleed background
+    const gradient = ctx.createLinearGradient(0, 0, 512, 512);
+    gradient.addColorStop(0, '#667eea');
+    gradient.addColorStop(1, '#764ba2');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 512, 512);
+
+    // Text in safe zone (center 80%)
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 150px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('AMD', 256, 226);
+
+    ctx.font = '75px Arial';
+    ctx.fillText('Pro', 256, 310);
+
+    const wrapper = document.createElement('div');
+    wrapper.style.margin = '20px';
+    wrapper.style.display = 'inline-block';
+
+    const label = document.createElement('p');
+    label.textContent = 'maskable-icon-512x512.png';
+
+    wrapper.appendChild(maskable);
+    wrapper.appendChild(label);
+    container.appendChild(wrapper);
+  </script>
+</body>
+</html>
